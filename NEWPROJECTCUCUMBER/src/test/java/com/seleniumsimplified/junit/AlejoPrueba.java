@@ -40,20 +40,25 @@ public class AlejoPrueba
 		user.sendKeys(Keys.CONTROL + "a");
 		user.sendKeys(Keys.DELETE);
 		user.sendKeys(usrAdm);
+		
 		//Enter password
 		WebElement pwd = driver.findElement(By.id("_58_password"));
 		pwd.sendKeys(pwAdm);
+		
 		//Click Login button
 		driver.findElement(By.className("btn-primary")).click();
+		
+		//assertEquals("Login successful, continuing test", HTTP + DOMAIN + "/group/guest/inicio", driverChrome.getCurrentUrl());		
 		//Access site and login - END
 		
-		//assertEquals("Login successful, continue test", HTTP + DOMAIN + "/group/guest/inicio", driverChrome.getCurrentUrl());
-		//assertThat(driverChrome.getCurrentUrl(), is(HTTP + DOMAIN + "/group/guest/crear-iniciativa"));
+		
+
+//assertThat(driverChrome.getCurrentUrl(), is(HTTP + DOMAIN + "/group/guest/crear-iniciativa"));
 
 		
 		//Create new initiative - START
 		driver.findElement(By.cssSelector("yui_patched_v3_11_0_1_1450255790923_340")).click();
-		assertEquals("URL is correct, continue test", HTTP + DOMAIN + "/group/guest/crear-iniciativa", driver.getCurrentUrl());
+		assertEquals("URL is correct, continuing test", HTTP + DOMAIN + "/group/guest/crear-iniciativa", driver.getCurrentUrl());
 		
 		driver.findElement(By.cssSelector("input.gwt-uid-3")).sendKeys("Cooperación al desarrollo");
 		driver.findElement(By.id("gwt-uid-7")).sendKeys("Iniciativa Económica");
