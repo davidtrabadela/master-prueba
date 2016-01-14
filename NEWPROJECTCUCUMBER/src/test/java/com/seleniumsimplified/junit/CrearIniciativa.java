@@ -20,17 +20,18 @@ public class CrearIniciativa
 	final String usrUsr = "qauser@accenture.com";
 	final String pwdUsr = "qauser01";
 	final String url = "";
-	WebElement button;
+
+	static WebElement button;
+	
+	static WebDriver driver = new ChromeDriver();
+	static WebDriverWait wait = new WebDriverWait(driver, 20);
 
 	@Test
 	public void loginTest () throws InterruptedException 
 	{ 
 		System.setProperty("webdriver.chrome.driver", "C:/ChromeDriver/ChromeDriver.exe");
-		WebDriver driver = new ChromeDriver();
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		
 		System.out.println("Heading to Login URL: " + HTTP + DOMAIN);
-		driver.navigate().to(HTTP + DOMAIN);
+		driver.get(HTTP + DOMAIN);
 		
 		System.out.println("Maximizing Window");
 		driver.manage().window().maximize();
@@ -59,18 +60,42 @@ public class CrearIniciativa
 			
 		driver.findElement(By.className("nueva-iniciativa-btn")).click();
 		System.out.println("Heading to 'Crear nueva iniciativa': " + HTTP + DOMAIN + "/group/guest/crear-iniciativa");
+		
+		dropDowns();
+		
+		WebElement iniName = driver.findElement(By.id("gwt-uid-5"));
+		iniName.sendKeys("MLG/DPCS - Automated New Initiative - A.Pane");
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 				
-		//Find buttons from the Dropdown	
+		button = driver.findElement(By.className("v-button-btn-primary"));
+		button.click();
+		
+		button = driver.findElement(By.xpath("//div[@class='v-filterselect-button']"));
+		wait.until(ExpectedConditions.stalenessOf(button));
+		dropDowns();
+		
+	}
+			
+	public static void dropDowns()
+	{
+	/**
+	1. Find buttons for all the Drop-downs,
+	2. Stores them in a List<WebElement>,
+	3. Clicks one by one,
+	4. Stores all options in another List<WebElement>,
+	5. Clicks all options from each Drop-downs leaving the last one (bottom) selected.
+	**/
+		
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='v-filterselect-button']")));
 		List<WebElement> buttonList = driver.findElements(By.xpath("//div[@class='v-filterselect-button']"));
-				
-		/*
-		Option and Button manipulation and navigation for both DropDowns
-		This can be used for ANY DropDowns in FACC since they all behave the same. 
-		The only thing that has to be manually edited is the driver.findElements to point to the right element.
-		*/
+		
 		for (int i = 0; i < buttonList.size(); i++) //Button process
 		{
-			
+		/**
+		Option and Button manipulation and navigation for both DropDowns
+		This can be used for ANY DropDowns in FACC since they all behave the same. 
+		The only thing that has to be manually edited is: driver.findElements(By.*); to point to the right element.
+		**/	
 			WebElement buttonDD = buttonList.get(i);
 			buttonDD.click();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -78,7 +103,7 @@ public class CrearIniciativa
 			List<WebElement> optionsListB = driver.findElements(By.xpath("//*[@id='VAADIN_COMBOBOX_OPTIONLIST']/div/div[2]/table/tbody/tr"));
 			//Auxiliary variable optionsListB is created to have dynamic size for each DropDown.
 			
-			for (int e = 0; e < optionsListB.size(); e++) //Options process
+			for (int e = 0; e < optionsListB.size(); e++) //DropDown Options navigation
 			{	
 				List<WebElement> optionsList = driver.findElements(By.xpath("//*[@id='VAADIN_COMBOBOX_OPTIONLIST']/div/div[2]/table/tbody/tr"));
 				WebElement optionsDD = optionsList.get(e);
@@ -88,27 +113,22 @@ public class CrearIniciativa
 				optionsDD.click();
 				driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 				
-				//Create an auxiliary variable and 'if' fix exit of Options iteration process. 
+				//Create an auxiliary variable and 'if' as a fix to exit DropDown Options navigation process. 
 				//If removed, DropDown will remain open and button process will FAIL.
 				int d = e+1;
-				if (d < optionsListB.size()) {
+				if (d < optionsListB.size()) 
+				{
 					buttonDD.click();
 					driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 				}
 			}
 		}
-		
-		WebElement iniName = driver.findElement(By.id("gwt-uid-5"));
-		iniName.sendKeys("MLG/DPCS - Automated New Initiative - A.Pane");
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	}
 				
-		button = driver.findElement(By.className("v-button-btn-primary"));
-		button.click();
-		
-		//driver.close();
-		//driver.quit();
-		
+		// driver.close();
+		// driver.quit();
+			
 	}
 
-		
-}
+
+
